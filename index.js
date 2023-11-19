@@ -29,9 +29,14 @@ app.post('/upload-pdf', upload.single('pdfFile'), async (req, res) => {
     }
 
     const pdfBytes = req.file.buffer;
-    console.log('PDF Bytes:', pdfBytes); // Log the content of the uploaded PDF file
 
-    // Rest of your code for PDF processing...
+    // Use pdf-lib to work with the PDF
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const numPages = pdfDoc.getPageCount();
+    console.log('Number of pages:', numPages);
+
+    // Send a response indicating successful processing
+    res.status(200).send(`PDF processed successfully. Number of pages: ${numPages}`);
   } catch (error) {
     console.error('Error processing PDF:', error);
     res.status(500).send('Error processing PDF: ' + error.message);
